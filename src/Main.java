@@ -1,33 +1,56 @@
 import java.util.Scanner;
 
+/**
+ * UC10: Case-Insensitive & Space-Ignored Palindrome
+ * This version uses preprocessing (Regex) to normalize the input
+ * before applying the validation logic.
+ */
 public class Main {
+
     public static void main(String[] args) {
-        // Create a Scanner object to read input from the console
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("--- Palindrome Checker (UC3) ---");
-        System.out.print("Enter a string to check: ");
-        String original = scanner.nextLine();
+        System.out.println("--- Palindrome Checker (Normalized Method) ---");
+        System.out.println("This version ignores spaces, punctuation, and case.");
+        System.out.print("Enter a string or sentence: ");
+        String input = scanner.nextLine();
 
-        // 1. Reverse string using a loop
-        String reversed = "";
-        
-        // Loop backwards from the end of the string to the start
-        for (int i = original.length() - 1; i >= 0; i--) {
-            // String Concatenation: Building the reversed string
-            // Note: This creates a new String object in every iteration
-            reversed += original.charAt(i);
-        }
+        // 1. Preprocessing / Normalization
+        // Use Regex [^a-zA-Z0-9] to remove everything except letters and numbers
+        String normalized = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
 
-        // 2. Compare original and reversed using equals()
-        // We use .equals() because == checks memory reference, 
-        // while .equals() checks the actual sequence of characters.
-        if (original.equals(reversed)) {
-            System.out.println("Result: '" + original + "' is a palindrome.");
+        // 2. Validation Logic (Using two-pointer approach for efficiency)
+        boolean isPalindrome = checkPalindrome(normalized);
+
+        // 3. Display Results
+        System.out.println("\nOriginal: " + input);
+        System.out.println("Normalized: " + normalized);
+
+        if (!normalized.isEmpty() && isPalindrome) {
+            System.out.println("Result: It is a Palindrome!");
+        } else if (normalized.isEmpty()) {
+            System.out.println("Result: No valid characters to check.");
         } else {
-            System.out.println("Result: '" + original + "' is NOT a palindrome.");
+            System.out.println("Result: It is NOT a Palindrome.");
         }
 
         scanner.close();
+    }
+
+    /**
+     * Efficient two-pointer check on the normalized string
+     */
+    private static boolean checkPalindrome(String str) {
+        int left = 0;
+        int right = str.length() - 1;
+
+        while (left < right) {
+            if (str.charAt(left) != str.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
     }
 }
