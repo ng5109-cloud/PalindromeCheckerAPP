@@ -1,33 +1,89 @@
 import java.util.Scanner;
 
+/**
+ * UC8: Linked List Based Palindrome Checker
+ * Uses a custom Singly Linked List and the Fast/Slow pointer technique.
+ */
+class Node {
+    char data;
+    Node next;
+
+    Node(char data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
 public class Main {
+
     public static void main(String[] args) {
-        // Create a Scanner object to read input from the console
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("--- Palindrome Checker (UC3) ---");
-        System.out.print("Enter a string to check: ");
-        String original = scanner.nextLine();
-
-        // 1. Reverse string using a loop
-        String reversed = "";
+        System.out.println("--- Palindrome Checker (Linked List Method) ---");
+        System.out.print("Enter a string: ");
+        String input = scanner.nextLine();
         
-        // Loop backwards from the end of the string to the start
-        for (int i = original.length() - 1; i >= 0; i--) {
-            // String Concatenation: Building the reversed string
-            // Note: This creates a new String object in every iteration
-            reversed += original.charAt(i);
+        if (input == null || input.isEmpty()) {
+            System.out.println("Result: It is a Palindrome!");
+            scanner.close();
+            return;
         }
 
-        // 2. Compare original and reversed using equals()
-        // We use .equals() because == checks memory reference, 
-        // while .equals() checks the actual sequence of characters.
-        if (original.equals(reversed)) {
-            System.out.println("Result: '" + original + "' is a palindrome.");
+        // 1. Build the Linked List
+        Node head = new Node(input.charAt(0));
+        Node current = head;
+        for (int i = 1; i < input.length(); i++) {
+            current.next = new Node(input.charAt(i));
+            current = current.next;
+        }
+
+        // 2. Find the middle using Fast and Slow pointers
+        // 
+        Node slow = head;
+        Node fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        // 3. Reverse the second half of the list in-place
+        // 
+        Node secondHalf = reverseList(slow);
+        Node firstHalf = head;
+
+        // 4. Compare the two halves
+        boolean isPalindrome = true;
+        Node tempSecond = secondHalf;
+        while (tempSecond != null) {
+            if (Character.toLowerCase(firstHalf.data) != Character.toLowerCase(tempSecond.data)) {
+                isPalindrome = false;
+                break;
+            }
+            firstHalf = firstHalf.next;
+            tempSecond = tempSecond.next;
+        }
+
+        // 5. Display Result
+        System.out.println("\nInput: " + input);
+        if (isPalindrome) {
+            System.out.println("Result: It is a Palindrome!");
         } else {
-            System.out.println("Result: '" + original + "' is NOT a palindrome.");
+            System.out.println("Result: It is NOT a Palindrome.");
         }
-
+        
         scanner.close();
+    }
+
+    // Helper method to reverse a Linked List in-place
+    private static Node reverseList(Node head) {
+        Node prev = null;
+        Node current = head;
+        while (current != null) {
+            Node nextNode = current.next;
+            current.next = prev;
+            prev = current;
+            current = nextNode;
+        }
+        return prev;
     }
 }
