@@ -1,31 +1,49 @@
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Scanner;
 
+/**
+ * UC7: Deque-Based Optimized Palindrome Checker
+ * Uses a Double-Ended Queue to compare characters from both ends simultaneously.
+ */
 public class Main {
+
     public static void main(String[] args) {
-        // Create a Scanner object to read input from the console
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("--- Palindrome Checker (UC3) ---");
-        System.out.print("Enter a string to check: ");
-        String original = scanner.nextLine();
+        System.out.println("--- Palindrome Checker (Deque-Based Method) ---");
+        System.out.print("Enter a string: ");
+        String input = scanner.nextLine();
 
-        // 1. Reverse string using a loop
-        String reversed = "";
-        
-        // Loop backwards from the end of the string to the start
-        for (int i = original.length() - 1; i >= 0; i--) {
-            // String Concatenation: Building the reversed string
-            // Note: This creates a new String object in every iteration
-            reversed += original.charAt(i);
+        // 1. Initialize a Deque
+        // ArrayDeque is a highly efficient implementation of the Deque interface
+        Deque<Character> deque = new ArrayDeque<>();
+
+        // 2. Insert characters into the deque
+        for (int i = 0; i < input.length(); i++) {
+            deque.addLast(input.charAt(i));
         }
 
-        // 2. Compare original and reversed using equals()
-        // We use .equals() because == checks memory reference, 
-        // while .equals() checks the actual sequence of characters.
-        if (original.equals(reversed)) {
-            System.out.println("Result: '" + original + "' is a palindrome.");
+        boolean isPalindrome = true;
+
+        // 3. Remove from first and last and compare
+        // We continue as long as there are at least 2 characters to compare
+        while (deque.size() > 1) {
+            char first = deque.removeFirst();
+            char last = deque.removeLast();
+
+            if (Character.toLowerCase(first) != Character.toLowerCase(last)) {
+                isPalindrome = false;
+                break;
+            }
+        }
+
+        // 4. Display Results
+        System.out.println("\nInput: " + input);
+        if (isPalindrome) {
+            System.out.println("Result: It is a Palindrome!");
         } else {
-            System.out.println("Result: '" + original + "' is NOT a palindrome.");
+            System.out.println("Result: It is NOT a Palindrome.");
         }
 
         scanner.close();
