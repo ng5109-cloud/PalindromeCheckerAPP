@@ -1,31 +1,68 @@
 import java.util.Scanner;
 
-public class Main {
-    public static void main(String[] args) {
-        // Create a Scanner object to read input from the console
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("--- Palindrome Checker (UC3) ---");
-        System.out.print("Enter a string to check: ");
-        String original = scanner.nextLine();
-
-        // 1. Reverse string using a loop
-        String reversed = "";
-        
-        // Loop backwards from the end of the string to the start
-        for (int i = original.length() - 1; i >= 0; i--) {
-            // String Concatenation: Building the reversed string
-            // Note: This creates a new String object in every iteration
-            reversed += original.charAt(i);
+/**
+ * PalindromeService Class (The "Engine")
+ * Encapsulates the logic according to OOP principles.
+ */
+class PalindromeService {
+    
+    /**
+     * Public method to check if a string is a palindrome.
+     * Uses normalization to ensure robustness.
+     */
+    public boolean check(String text) {
+        if (text == null || text.isEmpty()) {
+            return true;
         }
 
-        // 2. Compare original and reversed using equals()
-        // We use .equals() because == checks memory reference, 
-        // while .equals() checks the actual sequence of characters.
-        if (original.equals(reversed)) {
-            System.out.println("Result: '" + original + "' is a palindrome.");
+        // Normalize string: Remove non-alphanumeric and lowercase
+        String cleanText = text.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+        
+        return isPalindromeLogic(cleanText);
+    }
+
+    /**
+     * Private helper method (Internal implementation)
+     */
+    private boolean isPalindromeLogic(String str) {
+        int left = 0;
+        int right = str.length() - 1;
+
+        while (left < right) {
+            if (str.charAt(left) != str.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+}
+
+/**
+ * Main Class (The "Interface")
+ * Handles user input and interacts with the service.
+ */
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        // Instantiate the Service Object
+        PalindromeService service = new PalindromeService();
+
+        System.out.println("--- UC11: Object-Oriented Palindrome Service ---");
+        System.out.print("Enter string to validate: ");
+        String userInput = scanner.nextLine();
+
+        // Use the object to perform the check
+        boolean result = service.check(userInput);
+
+        // Display Output
+        System.out.println("\nAnalyzing: \"" + userInput + "\"");
+        if (result) {
+            System.out.println("Status: VALID Palindrome");
         } else {
-            System.out.println("Result: '" + original + "' is NOT a palindrome.");
+            System.out.println("Status: INVALID Palindrome");
         }
 
         scanner.close();
