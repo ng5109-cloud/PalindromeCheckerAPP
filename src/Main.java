@@ -1,31 +1,42 @@
 import java.util.Scanner;
+import java.util.Stack;
 
+/**
+ * UC5: Stack-Based Palindrome Checker
+ * This version uses the LIFO property of a Stack to reverse the input.
+ */
 public class Main {
+
     public static void main(String[] args) {
-        // Create a Scanner object to read input from the console
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("--- Palindrome Checker (UC3) ---");
-        System.out.print("Enter a string to check: ");
-        String original = scanner.nextLine();
+        System.out.println("--- Palindrome Checker (Stack-Based Method) ---");
+        System.out.print("Enter a string: ");
+        String input = scanner.nextLine();
 
-        // 1. Reverse string using a loop
-        String reversed = "";
-        
-        // Loop backwards from the end of the string to the start
-        for (int i = original.length() - 1; i >= 0; i--) {
-            // String Concatenation: Building the reversed string
-            // Note: This creates a new String object in every iteration
-            reversed += original.charAt(i);
+        // 1. Initialize a Stack of Characters
+        Stack<Character> stack = new Stack<>();
+
+        // 2. Push all characters of the string into the stack
+        for (int i = 0; i < input.length(); i++) {
+            stack.push(input.charAt(i));
         }
 
-        // 2. Compare original and reversed using equals()
-        // We use .equals() because == checks memory reference, 
-        // while .equals() checks the actual sequence of characters.
-        if (original.equals(reversed)) {
-            System.out.println("Result: '" + original + "' is a palindrome.");
+        // 3. Pop characters from the stack to build the reversed string
+        // Since it is LIFO, the last character pushed is the first one popped
+        StringBuilder reversed = new StringBuilder();
+        while (!stack.isEmpty()) {
+            reversed.append(stack.pop());
+        }
+
+        // 4. Compare and display result
+        System.out.println("\nOriginal: " + input);
+        System.out.println("Reversed: " + reversed.toString());
+
+        if (input.equalsIgnoreCase(reversed.toString())) {
+            System.out.println("Result: It is a Palindrome!");
         } else {
-            System.out.println("Result: '" + original + "' is NOT a palindrome.");
+            System.out.println("Result: It is NOT a Palindrome.");
         }
 
         scanner.close();
